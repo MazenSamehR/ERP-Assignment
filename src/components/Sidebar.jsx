@@ -1,8 +1,9 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Home, Folder, Share2, Star, Plus } from 'lucide-react';
 import NavItem from './NavItem.jsx';
 
-const Sidebar = () => {
+const Sidebar = ({ activeSection, onSectionChange }) => {
   return (
     <div className="bg-white h-full w-56 py-4 border-r border-gray-200 flex flex-col">
       <div className="px-4 mb-8">
@@ -13,14 +14,22 @@ const Sidebar = () => {
       </div>
     
       <div className="flex-1">
-        <NavItem icon={<Home size={18} />} label="Home" active={true} />
-        <NavItem icon={<Folder size={18} />} label="Your folders" indented={true} />
-        <NavItem icon={<Share2 size={18} />} label="Shared folders" indented={true} />
-        <NavItem icon={<Star size={18} />} label="Starred" />
+        <div onClick={() => onSectionChange('home')}>
+          <NavItem icon={<Home size={18} />} label="Home" active={activeSection === 'home'} />
+        </div>
+        <div onClick={() => onSectionChange('folders')}>
+          <NavItem icon={<Folder size={18} />} label="Your folders" active={activeSection === 'folders'} indented={true} />
+        </div>
+        <div onClick={() => onSectionChange('shared')}>
+          <NavItem icon={<Share2 size={18} />} label="Shared folders" active={activeSection === 'shared'} indented={true} />
+        </div>
+        <div onClick={() => onSectionChange('starred')}>
+          <NavItem icon={<Star size={18} />} label="Starred" active={activeSection === 'starred'} />
+        </div>
       </div>
 
       <div className="px-4 py-3 mt-auto">
-        <div className="flex items-center bg-blue-50 text-blue-600 rounded-md px-3 py-2 font-medium text-sm">
+        <div className="flex items-center bg-blue-50 text-blue-600 rounded-md px-3 py-2 font-medium text-sm cursor-pointer hover:bg-blue-100 transition-colors duration-200">
           <Plus size={16} className="mr-2" />
           <span>New</span>
         </div>
@@ -29,5 +38,9 @@ const Sidebar = () => {
   );
 };
 
-export default Sidebar;
+Sidebar.propTypes = {
+  activeSection: PropTypes.string.isRequired,
+  onSectionChange: PropTypes.func.isRequired
+};
 
+export default Sidebar;

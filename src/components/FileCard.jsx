@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import { MoreVertical } from "lucide-react";
+import { MoreVertical, Star } from "lucide-react";
 import { FileType } from "../constants/fileTypes";
 import FileIcon from "./FileIcon";
 
-const FileCard = ({ file, onRename, onShare, onDelete }) => {
+const FileCard = ({ file, onRename, onShare, onDelete, onToggleStar }) => {
   const [showMenu, setShowMenu] = useState(false);
 
   const handleClickOutside = (e) => {
@@ -31,6 +31,11 @@ const FileCard = ({ file, onRename, onShare, onDelete }) => {
     setShowMenu(false);
   };
 
+  const handleStarClick = (e) => {
+    e.stopPropagation();
+    onToggleStar(file.id);
+  };
+
   return (
     <div className="group bg-white rounded-lg overflow-visible shadow-sm hover:shadow-md transition-shadow duration-300 file-card">
       <div className="p-4 cursor-pointer">
@@ -40,7 +45,16 @@ const FileCard = ({ file, onRename, onShare, onDelete }) => {
             <p className="text-sm font-medium text-gray-800">{file.name}</p>
           </div>
 
-          <div className="relative">
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleStarClick}
+              className="p-1 rounded-full hover:bg-gray-100 focus:outline-none opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+            >
+              <Star
+                size={16}
+                className={file.starred ? "text-yellow-400 fill-yellow-400" : "text-gray-500"}
+              />
+            </button>
             <button
               onClick={toggleMenu}
               className="p-1 rounded-full hover:bg-gray-100 focus:outline-none opacity-0 group-hover:opacity-100 transition-opacity duration-200"
@@ -99,10 +113,12 @@ FileCard.propTypes = {
     type: PropTypes.string.isRequired,
     extension: PropTypes.string,
     modified: PropTypes.string,
+    starred: PropTypes.bool,
   }).isRequired,
   onRename: PropTypes.func.isRequired,
   onShare: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
+  onToggleStar: PropTypes.func.isRequired,
 };
 
 export default FileCard;

@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import FileCard from "./FileCard";
 import Modal from "./Modal";
 
-const FileGrid = ({ files, onRename, onDelete }) => {
+const FileGrid = ({ files, onRename, onDelete, onToggleStar }) => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [renameModalOpen, setRenameModalOpen] = useState(false);
   const [shareModalOpen, setShareModalOpen] = useState(false);
@@ -31,7 +31,6 @@ const FileGrid = ({ files, onRename, onDelete }) => {
     setSelectedFile(null);
   };
   
-
   const confirmShare = () => {
     alert(`Shared "${selectedFile.name}" with your team.`);
     setShareModalOpen(false);
@@ -47,6 +46,7 @@ const FileGrid = ({ files, onRename, onDelete }) => {
           onRename={handleRename}
           onShare={handleShare}
           onDelete={handleDelete}
+          onToggleStar={onToggleStar}
         />
       ))}
 
@@ -87,8 +87,12 @@ FileGrid.propTypes = {
       type: PropTypes.string.isRequired,
       extension: PropTypes.string,
       modified: PropTypes.string,
+      starred: PropTypes.bool,
     })
   ).isRequired,
+  onRename: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
+  onToggleStar: PropTypes.func.isRequired,
 };
 
 export default FileGrid;
