@@ -92,7 +92,8 @@ function App() {
     file.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const starredItems = [...folders.filter(folder => folder.starred), ...files.filter(file => file.starred)];
+  const starredFolders = folders.filter(folder => folder.starred);
+  const starredFiles = files.filter(file => file.starred);
 
   const renderContent = () => {
     switch (activeSection) {
@@ -130,11 +131,11 @@ function App() {
             collapsible={false}
           />
         );
-      case 'shared':
+      case 'files':
         return (
           <FileSection 
-            title="Shared Folders" 
-            files={[]} 
+            title="Your Files" 
+            files={filteredFiles} 
             onRename={handleRename}
             onDelete={handleDelete}
             onToggleStar={handleToggleStar}
@@ -143,14 +144,28 @@ function App() {
         );
       case 'starred':
         return (
-          <FileSection 
-            title="Starred Items" 
-            files={starredItems} 
-            onRename={handleRename}
-            onDelete={handleDelete}
-            onToggleStar={handleToggleStar}
-            collapsible={false}
-          />
+          <>
+            {starredFolders.length > 0 && (
+              <FileSection 
+                title="Starred Folders" 
+                files={starredFolders} 
+                onRename={handleRename}
+                onDelete={handleDelete}
+                onToggleStar={handleToggleStar}
+                collapsible={false}
+              />
+            )}
+            {starredFiles.length > 0 && (
+              <FileSection 
+                title="Starred Files" 
+                files={starredFiles} 
+                onRename={handleRename}
+                onDelete={handleDelete}
+                onToggleStar={handleToggleStar}
+                collapsible={false}
+              />
+            )}
+          </>
         );
       default:
         return null;

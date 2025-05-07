@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Home, Folder, Share2, Star, Plus } from 'lucide-react';
+import { Home, Folder, FileText, Star, Plus } from 'lucide-react';
 import NavItem from './NavItem.jsx';
 
 const Sidebar = ({ activeSection, onSectionChange }) => {
@@ -20,8 +20,8 @@ const Sidebar = ({ activeSection, onSectionChange }) => {
         <div onClick={() => onSectionChange('folders')}>
           <NavItem icon={<Folder size={18} />} label="Your folders" active={activeSection === 'folders'} indented={true} />
         </div>
-        <div onClick={() => onSectionChange('shared')}>
-          <NavItem icon={<Share2 size={18} />} label="Shared folders" active={activeSection === 'shared'} indented={true} />
+        <div onClick={() => onSectionChange('files')}>
+          <NavItem icon={<FileText size={18} />} label="Your files" active={activeSection === 'files'} indented={true} />
         </div>
         <div onClick={() => onSectionChange('starred')}>
           <NavItem icon={<Star size={18} />} label="Starred" active={activeSection === 'starred'} />

@@ -37,7 +37,7 @@ const FileCard = ({ file, onRename, onShare, onDelete, onToggleStar }) => {
   };
 
   return (
-    <div className="group bg-white rounded-lg overflow-visible shadow-sm hover:shadow-md transition-shadow duration-300 file-card">
+    <div className="group bg-white rounded-lg overflow-visible shadow-sm hover:shadow-md transition-shadow duration-300 file-card relative">
       <div className="p-4 cursor-pointer">
         <div className="flex justify-between items-start mb-2">
           <div className="flex items-center gap-2">
@@ -52,7 +52,11 @@ const FileCard = ({ file, onRename, onShare, onDelete, onToggleStar }) => {
             >
               <Star
                 size={16}
-                className={file.starred ? "text-yellow-400 fill-yellow-400" : "text-gray-500"}
+                className={
+                  file.starred
+                    ? "text-yellow-400 fill-yellow-400"
+                    : "text-gray-500"
+                }
               />
             </button>
             <button
@@ -64,7 +68,7 @@ const FileCard = ({ file, onRename, onShare, onDelete, onToggleStar }) => {
 
             {showMenu && (
               <div
-                className="absolute right-0 mt-1 py-1 w-48 bg-white rounded-md shadow-lg z-10 border border-gray-200 file-card-menu"
+                className="absolute right-0 top-10 mt-1 py-1 w-48 bg-white rounded-md shadow-lg z-10 border border-gray-200 file-card-menu"
                 onClick={(e) => e.stopPropagation()}
               >
                 <button

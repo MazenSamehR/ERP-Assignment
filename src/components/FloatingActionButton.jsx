@@ -13,6 +13,8 @@ const FloatingActionButton = ({ onAddItem }) => {
   const [fileDescription, setFileDescription] = useState("");
   const [fileError, setFileError] = useState("");
 
+  const MAX_FILE_SIZE = 10 * 1024 * 1024;
+
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
@@ -29,7 +31,14 @@ const FloatingActionButton = ({ onAddItem }) => {
       setShowNewFolderModal(false);
     }
   };
-  
+
+  const formatFileSize = (bytes) => {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  };
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -43,6 +52,14 @@ const FloatingActionButton = ({ onAddItem }) => {
         "application/vnd.ms-powerpoint",
         "application/vnd.openxmlformats-officedocument.presentationml.presentation",
       ];
+
+      if (file.size > MAX_FILE_SIZE) {
+        setSelectedFile(null);
+        setFileError(
+          `File size exceeds ${formatFileSize(MAX_FILE_SIZE)}. Selected file size: ${formatFileSize(file.size)}`
+        );
+        return;
+      }
 
       if (allowedTypes.includes(file.type)) {
         setSelectedFile(file);
@@ -65,6 +82,7 @@ const FloatingActionButton = ({ onAddItem }) => {
         tags: fileTags,
         description: fileDescription,
         type: 'file',
+        size: selectedFile.size,
         uploadedAt: new Date().toISOString(),
       };
       onAddItem(newFile);
@@ -72,7 +90,6 @@ const FloatingActionButton = ({ onAddItem }) => {
       resetFileUploadForm();
     }
   };
-  
 
   const resetFileUploadForm = () => {
     setSelectedFile(null);
