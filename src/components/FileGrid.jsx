@@ -1,0 +1,94 @@
+import React, { useState } from "react";
+import PropTypes from "prop-types";
+import FileCard from "./FileCard";
+import Modal from "./Modal";
+
+const FileGrid = ({ files, onRename, onDelete }) => {
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [renameModalOpen, setRenameModalOpen] = useState(false);
+  const [shareModalOpen, setShareModalOpen] = useState(false);
+  const [newFileName, setNewFileName] = useState("");
+  
+  const handleRename = (file) => {
+    setSelectedFile(file);
+    setNewFileName(file.name);
+    setRenameModalOpen(true);
+  };
+
+  const handleShare = (file) => {
+    setSelectedFile(file);
+    setShareModalOpen(true);
+  };
+
+  const handleDelete = (file) => {
+    onDelete(file.id);
+    setSelectedFile(null);
+  };
+
+  const confirmRename = () => {
+    onRename(selectedFile.id, newFileName);
+    setRenameModalOpen(false);
+    setSelectedFile(null);
+  };
+  
+
+  const confirmShare = () => {
+    alert(`Shared "${selectedFile.name}" with your team.`);
+    setShareModalOpen(false);
+    setSelectedFile(null);
+  };
+
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      {files.map((file) => (
+        <FileCard
+          key={file.id}
+          file={file}
+          onRename={handleRename}
+          onShare={handleShare}
+          onDelete={handleDelete}
+        />
+      ))}
+
+      <Modal
+        isOpen={renameModalOpen}
+        onClose={() => setRenameModalOpen(false)}
+        onConfirm={confirmRename}
+        title="Rename File"
+      >
+        <input
+          type="text"
+          value={newFileName}
+          onChange={(e) => setNewFileName(e.target.value)}
+          className="w-full px-3 py-2 border border-gray-300 rounded-md"
+        />
+      </Modal>
+
+      <Modal
+        isOpen={shareModalOpen}
+        onClose={() => setShareModalOpen(false)}
+        onConfirm={confirmShare}
+        title="Share File"
+        confirmText="Send"
+      >
+        <p className="text-gray-700 mb-2">
+          Share "{selectedFile?.name}" with your team?
+        </p>
+      </Modal>
+    </div>
+  );
+};
+
+FileGrid.propTypes = {
+  files: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+      type: PropTypes.string.isRequired,
+      extension: PropTypes.string,
+      modified: PropTypes.string,
+    })
+  ).isRequired,
+};
+
+export default FileGrid;
