@@ -105,13 +105,13 @@ const FloatingActionButton = ({ onAddItem }) => {
         {isOpen && (
           <div className="absolute bottom-16 right-0 flex flex-col-reverse space-y-reverse space-y-3 items-center mb-2">
             <button
-              className="flex items-center justify-center h-10 w-10 rounded-full bg-blue-50 text-blue-600 shadow-md hover:bg-blue-100 transition-colors duration-200"
+              className="flex cursor-pointer items-center justify-center h-10 w-10 rounded-full bg-blue-50 text-blue-600 shadow-md hover:bg-blue-100 transition-colors duration-200"
               onClick={() => setShowNewFolderModal(true)}
             >
               <Folder size={20} />
             </button>
             <button
-              className="flex items-center justify-center h-10 w-10 rounded-full bg-blue-50 text-blue-600 shadow-md hover:bg-blue-100 transition-colors duration-200"
+              className="flex items-center cursor-pointer justify-center h-10 w-10 rounded-full bg-blue-50 text-blue-600 shadow-md hover:bg-blue-100 transition-colors duration-200"
               onClick={() => setShowFileUploadModal(true)}
             >
               <FileText size={20} />
@@ -120,7 +120,7 @@ const FloatingActionButton = ({ onAddItem }) => {
         )}
 
         <button
-          className={`flex items-center justify-center h-14 w-14 rounded-full shadow-lg focus:outline-none transition-all duration-300 ${
+          className={`flex items-center cursor-pointer justify-center h-14 w-14 rounded-full shadow-lg focus:outline-none transition-all duration-300 ${
             isOpen ? "bg-gray-700 rotate-45" : "bg-blue-600 hover:bg-blue-700"
           }`}
           onClick={toggleMenu}

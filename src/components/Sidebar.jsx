@@ -27,13 +27,6 @@ const Sidebar = ({ activeSection, onSectionChange }) => {
           <NavItem icon={<Star size={18} />} label="Starred" active={activeSection === 'starred'} />
         </div>
       </div>
-
-      <div className="px-4 py-3 mt-auto">
-        <div className="flex items-center bg-blue-50 text-blue-600 rounded-md px-3 py-2 font-medium text-sm cursor-pointer hover:bg-blue-100 transition-colors duration-200">
-          <Plus size={16} className="mr-2" />
-          <span>New</span>
-        </div>
-      </div>
     </div>
   );
 };
