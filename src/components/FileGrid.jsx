@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import FileCard from "./FileCard";
 import Modal from "./Modal";
 
-const FileGrid = ({ files, onRename, onDelete, onToggleStar }) => {
+const FileGrid = ({ files, onRename, onDelete, onToggleStar, onFolderClick }) => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [renameModalOpen, setRenameModalOpen] = useState(false);
   const [shareModalOpen, setShareModalOpen] = useState(false);
@@ -47,6 +47,7 @@ const FileGrid = ({ files, onRename, onDelete, onToggleStar }) => {
           onShare={handleShare}
           onDelete={handleDelete}
           onToggleStar={onToggleStar}
+          onFolderClick={onFolderClick}
         />
       ))}
 
@@ -93,6 +94,7 @@ FileGrid.propTypes = {
   onRename: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
   onToggleStar: PropTypes.func.isRequired,
+  onFolderClick: PropTypes.func,
 };
 
 export default FileGrid;

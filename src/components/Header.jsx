@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { Search } from "lucide-react";
 
-const Header = ({ username, onSearch }) => {
+const Header = ({ username, onSearch, breadcrumbs = [] }) => {
   const [searchValue, setSearchValue] = useState("");
 
   const handleSearchChange = (e) => {
@@ -14,9 +14,22 @@ const Header = ({ username, onSearch }) => {
   return (
     <div className="w-full">
       <div className="flex items-center justify-between mb-8">
-        <h1 className="text-2xl font-medium text-gray-800 flex-1">
-          Welcome, {username}
-        </h1>
+        <div className="flex-1">
+          <h1 className="text-2xl font-medium text-gray-800">
+            Welcome, {username}
+          </h1>
+          {breadcrumbs.length > 0 && (
+            <div className="flex items-center mt-2 text-sm text-gray-500">
+              <span>Home</span>
+              {breadcrumbs.map((crumb, index) => (
+                <React.Fragment key={index}>
+                  <span className="mx-2">/</span>
+                  <span>{crumb}</span>
+                </React.Fragment>
+              ))}
+            </div>
+          )}
+        </div>
 
         <div className="flex-1 flex justify-center">
           <div className="relative w-full max-w-[32rem]">
@@ -42,6 +55,7 @@ const Header = ({ username, onSearch }) => {
 Header.propTypes = {
   username: PropTypes.string.isRequired,
   onSearch: PropTypes.func.isRequired,
+  breadcrumbs: PropTypes.arrayOf(PropTypes.string),
 };
 
 export default Header;

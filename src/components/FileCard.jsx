@@ -4,7 +4,7 @@ import { MoreVertical, Star } from "lucide-react";
 import { FileType } from "../constants/fileTypes";
 import FileIcon from "./FileIcon";
 
-const FileCard = ({ file, onRename, onShare, onDelete, onToggleStar }) => {
+const FileCard = ({ file, onRename, onShare, onDelete, onToggleStar, onFolderClick }) => {
   const [showMenu, setShowMenu] = useState(false);
 
   const handleClickOutside = (e) => {
@@ -36,9 +36,20 @@ const FileCard = ({ file, onRename, onShare, onDelete, onToggleStar }) => {
     onToggleStar(file.id);
   };
 
+  const handleCardClick = () => {
+    if (file.type === FileType.FOLDER && onFolderClick) {
+      onFolderClick(file);
+    }
+  };
+
   return (
-    <div className="group bg-white rounded-lg overflow-visible shadow-sm hover:shadow-md transition-shadow duration-300 file-card relative">
-      <div className="p-4 cursor-pointer">
+    <div 
+      className={`group bg-white rounded-lg overflow-visible shadow-sm hover:shadow-md transition-shadow duration-300 file-card relative ${
+        file.type === FileType.FOLDER ? 'cursor-pointer' : ''
+      }`}
+      onClick={handleCardClick}
+    >
+      <div className="p-4">
         <div className="flex justify-between items-start mb-2">
           <div className="flex items-center gap-2">
             <FileIcon type={file.type} extension={file.extension} />
@@ -123,6 +134,7 @@ FileCard.propTypes = {
   onShare: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
   onToggleStar: PropTypes.func.isRequired,
+  onFolderClick: PropTypes.func,
 };
 
 export default FileCard;

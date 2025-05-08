@@ -11,10 +11,11 @@ function App() {
   const [folders, setFolders] = useState(folderData);
   const [files, setFiles] = useState(fileData);
   const [activeSection, setActiveSection] = useState('home');
+  const [currentPath, setCurrentPath] = useState([]);
 
   const handleSearch = (query) => {
     setSearchQuery(query);
-  }; 
+  };
 
   const handleRename = (itemId, newName) => {
     setFolders(prev =>
@@ -47,13 +48,24 @@ function App() {
     );
   };
 
+  const handleFolderClick = (folder) => {
+    setCurrentPath([...currentPath, folder]);
+  };
+
+  const handleNavigateBack = () => {
+    setCurrentPath(prev => prev.slice(0, -1));
+  };
+
   const handleAddItem = (newItem) => {
     const id = `${newItem.type}-${Date.now()}`;
+    const parentFolderId = currentPath.length > 0 ? currentPath[currentPath.length - 1].id : null;
+    
     const itemToAdd = {
       ...newItem,
       id,
       modified: new Date().toISOString(),
-      starred: false
+      starred: false,
+      parentFolderId
     };
 
     if (newItem.type === 'folder') {
@@ -84,11 +96,18 @@ function App() {
     }
   };
 
-  const filteredFolders = folders.filter(folder => 
+  const getCurrentItems = () => {
+    const parentFolderId = currentPath.length > 0 ? currentPath[currentPath.length - 1].id : null;
+    const currentFolders = folders.filter(folder => folder.parentFolderId === parentFolderId);
+    const currentFiles = files.filter(file => file.parentFolderId === parentFolderId);
+    return { folders: currentFolders, files: currentFiles };
+  };
+
+  const filteredItems = getCurrentItems();
+  const filteredFolders = filteredItems.folders.filter(folder => 
     folder.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
-
-  const filteredFiles = files.filter(file => 
+  const filteredFiles = filteredItems.files.filter(file => 
     file.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -100,18 +119,27 @@ function App() {
       case 'home':
         return (
           <>
+            {currentPath.length > 0 && (
+              <button
+                onClick={handleNavigateBack}
+                className="mb-4 px-4 py-2 text-sm text-blue-600 hover:bg-blue-50 rounded-md"
+              >
+                ← Back
+              </button>
+            )}
             <FileSection 
               title="Folders" 
-              files={filteredFolders} 
+              files={filteredFolders}
               onRename={handleRename}
               onDelete={handleDelete}
               onToggleStar={handleToggleStar}
+              onFolderClick={handleFolderClick}
               collapsible={true}
               expanded={true} 
             />
             <FileSection 
               title="Files" 
-              files={filteredFiles} 
+              files={filteredFiles}
               onRename={handleRename}
               onDelete={handleDelete}
               onToggleStar={handleToggleStar}
@@ -124,10 +152,11 @@ function App() {
         return (
           <FileSection 
             title="Your Folders" 
-            files={filteredFolders} 
+            files={filteredFolders}
             onRename={handleRename}
             onDelete={handleDelete}
             onToggleStar={handleToggleStar}
+            onFolderClick={handleFolderClick}
             collapsible={false}
           />
         );
@@ -135,7 +164,7 @@ function App() {
         return (
           <FileSection 
             title="Your Files" 
-            files={filteredFiles} 
+            files={filteredFiles}
             onRename={handleRename}
             onDelete={handleDelete}
             onToggleStar={handleToggleStar}
@@ -148,17 +177,18 @@ function App() {
             {starredFolders.length > 0 && (
               <FileSection 
                 title="Starred Folders" 
-                files={starredFolders} 
+                files={starredFolders}
                 onRename={handleRename}
                 onDelete={handleDelete}
                 onToggleStar={handleToggleStar}
+                onFolderClick={handleFolderClick}
                 collapsible={false}
               />
             )}
             {starredFiles.length > 0 && (
               <FileSection 
                 title="Starred Files" 
-                files={starredFiles} 
+                files={starredFiles}
                 onRename={handleRename}
                 onDelete={handleDelete}
                 onToggleStar={handleToggleStar}
@@ -179,7 +209,11 @@ function App() {
       </div>
       
       <div className="flex-1 overflow-auto p-8">
-        <Header username="YN" onSearch={handleSearch} />
+        <Header 
+          username="YN" 
+          onSearch={handleSearch}
+          breadcrumbs={currentPath.map(folder => folder.name)}
+        />
         {renderContent()}
         <FloatingActionButton onAddItem={handleAddItem} />
       </div>

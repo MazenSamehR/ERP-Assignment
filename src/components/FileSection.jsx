@@ -3,7 +3,16 @@ import PropTypes from 'prop-types';
 import { ChevronDown, ChevronRight } from 'lucide-react';
 import FileGrid from './FileGrid';
 
-const FileSection = ({ title, onRename, onDelete, onToggleStar, files, collapsible = false, expanded = true }) => {
+const FileSection = ({ 
+  title, 
+  onRename, 
+  onDelete, 
+  onToggleStar, 
+  onFolderClick,
+  files, 
+  collapsible = false, 
+  expanded = true 
+}) => {
   const [isExpanded, setIsExpanded] = useState(expanded);
 
   return (
@@ -28,6 +37,7 @@ const FileSection = ({ title, onRename, onDelete, onToggleStar, files, collapsib
           onRename={onRename} 
           onDelete={onDelete}
           onToggleStar={onToggleStar}
+          onFolderClick={onFolderClick}
         />
       )}
     </div>
@@ -40,6 +50,7 @@ FileSection.propTypes = {
   onRename: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
   onToggleStar: PropTypes.func.isRequired,
+  onFolderClick: PropTypes.func,
   collapsible: PropTypes.bool,
   expanded: PropTypes.bool
 };

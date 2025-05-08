@@ -6,63 +6,69 @@ const getRecentDate = () => {
   return date.toISOString();
 };
 
-
 export const folderData = [
   {
     id: 'folder-1',
-    name: 'folder-1',
+    name: 'Documents',
     type: FileType.FOLDER,
-    modified: getRecentDate()
+    modified: getRecentDate(),
+    parentFolderId: null
   },
   {
     id: 'folder-2',
-    name: 'folder-2',
+    name: 'Images',
     type: FileType.FOLDER,
-    modified: getRecentDate()
+    modified: getRecentDate(),
+    parentFolderId: null
   },
   {
     id: 'folder-3',
-    name: 'folder-3',
+    name: 'Work Projects',
     type: FileType.FOLDER,
-    modified: getRecentDate()
+    modified: getRecentDate(),
+    parentFolderId: null
   },
   {
     id: 'folder-4',
-    name: 'folder-4',
+    name: 'Personal',
     type: FileType.FOLDER,
-    modified: getRecentDate()
+    modified: getRecentDate(),
+    parentFolderId: 'folder-1'
   }
 ];
-
 
 export const fileData = [
   {
     id: 'file-1',
-    name: 'file-1.pptx',
+    name: 'Presentation.pptx',
     type: FileType.PRESENTATION,
     extension: 'pptx',
-    modified: getRecentDate()
+    modified: getRecentDate(),
+    parentFolderId: null
   },
   {
     id: 'file-2',
-    name: 'file-2.pptx',
-    type: FileType.PRESENTATION,
-    extension: 'pptx',
-    modified: getRecentDate()
+    name: 'Budget.xlsx',
+    type: FileType.SPREADSHEET,
+    extension: 'xlsx',
+    modified: getRecentDate(),
+    parentFolderId: 'folder-1'
   },
   {
     id: 'file-3',
-    name: 'file-3.pptx',
-    type: FileType.PRESENTATION,
-    extension: 'pptx',
-    modified: getRecentDate()
+    name: 'Report.docx',
+    type: FileType.DOCUMENT,
+    extension: 'docx',
+    modified: getRecentDate(),
+    parentFolderId: 'folder-1'
   },
   {
     id: 'file-4',
-    name: 'file-4.pptx',
-    type: FileType.PRESENTATION,
-    extension: 'pptx',
-    modified: getRecentDate()
+    name: 'Meeting Notes.docx',
+    type: FileType.DOCUMENT,
+    extension: 'docx',
+    modified: getRecentDate(),
+    parentFolderId: 'folder-3'
   }
 ];
 
