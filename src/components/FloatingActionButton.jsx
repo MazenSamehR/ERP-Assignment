@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Plus, Folder, FileText, Upload, AlertCircle } from "lucide-react";
+import { toast, Toaster } from 'react-hot-toast';
 import Modal from "./Modal";
 
 const FloatingActionButton = ({ onAddItem }) => {
@@ -29,6 +30,7 @@ const FloatingActionButton = ({ onAddItem }) => {
       onAddItem(newFolder);
       setNewFolderName('');
       setShowNewFolderModal(false);
+      toast.success('Folder created successfully');
     }
   };
 
@@ -88,6 +90,7 @@ const FloatingActionButton = ({ onAddItem }) => {
       onAddItem(newFile);
       setShowFileUploadModal(false);
       resetFileUploadForm();
+      toast.success('File uploaded successfully');
     }
   };
 
@@ -101,6 +104,7 @@ const FloatingActionButton = ({ onAddItem }) => {
 
   return (
     <>
+      <Toaster position="bottom-right" />
       <div className="fixed bottom-8 right-8">
         {isOpen && (
           <div className="absolute bottom-16 right-0 flex flex-col-reverse space-y-reverse space-y-3 items-center mb-2">
