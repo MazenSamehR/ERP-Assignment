@@ -9,6 +9,7 @@ const FileSection = ({
   onDelete, 
   onToggleStar, 
   onFolderClick,
+  onUpdatePermissions,
   files, 
   collapsible = false, 
   expanded = true 
@@ -38,6 +39,7 @@ const FileSection = ({
           onDelete={onDelete}
           onToggleStar={onToggleStar}
           onFolderClick={onFolderClick}
+          onUpdatePermissions={onUpdatePermissions}
         />
       )}
     </div>
@@ -51,6 +53,7 @@ FileSection.propTypes = {
   onDelete: PropTypes.func.isRequired,
   onToggleStar: PropTypes.func.isRequired,
   onFolderClick: PropTypes.func,
+  onUpdatePermissions: PropTypes.func.isRequired,
   collapsible: PropTypes.bool,
   expanded: PropTypes.bool
 };

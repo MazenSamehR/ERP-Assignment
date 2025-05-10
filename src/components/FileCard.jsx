@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import { MoreVertical, Star, Tag, Info, Edit3, Trash, Share } from "lucide-react";
+import { MoreVertical, Star, Tag, Info, Edit3, Trash, Share, Lock } from "lucide-react";
 import { FileType } from "../constants/fileTypes";
 import FileIcon from "./FileIcon";
 import Modal from "./Modal";
+import PermissionModal from "./PermissionModal";
 
-const FileCard = ({ file, onRename, onShare, onDelete, onToggleStar, onFolderClick }) => {
+const FileCard = ({ file, onRename, onDelete, onToggleStar, onFolderClick, onUpdatePermissions }) => {
   const [showMenu, setShowMenu] = useState(false);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [showTagsModal, setShowTagsModal] = useState(false);
+  const [showPermissionModal, setShowPermissionModal] = useState(false);
   const [tags, setTags] = useState(file.tags ? file.tags.split(',').filter(Boolean) : []);
   const [newTag, setNewTag] = useState("");
 
@@ -111,18 +113,34 @@ const FileCard = ({ file, onRename, onShare, onDelete, onToggleStar, onFolderCli
                   onClick={(e) => e.stopPropagation()}
                 >
                   <button
-                    onClick={() => setShowDetailsModal(true)}
+                    onClick={() => {
+                      setShowMenu(false);
+                      setShowDetailsModal(true);
+                    }}
                     className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
                   >
                     <Info size={16} className="mr-2" />
                     Details
                   </button>
                   <button
-                    onClick={() => setShowTagsModal(true)}
+                    onClick={() => {
+                      setShowMenu(false);
+                      setShowTagsModal(true);
+                    }}
                     className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
                   >
                     <Tag size={16} className="mr-2" />
                     Manage Tags
+                  </button>
+                  <button
+                    onClick={() => {
+                      setShowMenu(false);
+                      setShowPermissionModal(true);
+                    }}
+                    className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
+                  >
+                    <Lock size={16} className="mr-2" />
+                    Permissions
                   </button>
                   <button
                     onClick={handleAction(onRename)}
@@ -130,13 +148,6 @@ const FileCard = ({ file, onRename, onShare, onDelete, onToggleStar, onFolderCli
                   >
                     <Edit3 size={16} className="mr-2" />
                     Rename
-                  </button>
-                  <button
-                    onClick={handleAction(onShare)}
-                    className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
-                  >
-                    <Share size={16} className="mr-2" />
-                    Share
                   </button>
                   <button
                     onClick={handleAction(onDelete)}
@@ -149,10 +160,6 @@ const FileCard = ({ file, onRename, onShare, onDelete, onToggleStar, onFolderCli
               )}
             </div>
           </div>
-
-          {file.type === FileType.PRESENTATION && (
-            <div className="bg-gray-100 rounded w-full h-50 mb-3"></div>
-          )}
 
           <div className="mt-2">
             {file.modified && (
@@ -268,6 +275,17 @@ const FileCard = ({ file, onRename, onShare, onDelete, onToggleStar, onFolderCli
           </div>
         </div>
       </Modal>
+
+      <PermissionModal
+        isOpen={showPermissionModal}
+        onClose={() => setShowPermissionModal(false)}
+        onUpdatePermissions={(permissions) => {
+          onUpdatePermissions(file.id, permissions);
+          setShowPermissionModal(false);
+        }}
+        resourceName={file.name}
+        currentPermissions={file.permissions || []}
+      />
     </>
   );
 };
@@ -283,12 +301,18 @@ FileCard.propTypes = {
     size: PropTypes.number,
     description: PropTypes.string,
     tags: PropTypes.string,
+    permissions: PropTypes.arrayOf(
+      PropTypes.shape({
+        email: PropTypes.string.isRequired,
+        role: PropTypes.string.isRequired
+      })
+    )
   }).isRequired,
   onRename: PropTypes.func.isRequired,
-  onShare: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
   onToggleStar: PropTypes.func.isRequired,
   onFolderClick: PropTypes.func,
+  onUpdatePermissions: PropTypes.func.isRequired
 };
 
 export default FileCard;

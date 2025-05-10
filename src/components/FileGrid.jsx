@@ -3,21 +3,15 @@ import PropTypes from "prop-types";
 import FileCard from "./FileCard";
 import Modal from "./Modal";
 
-const FileGrid = ({ files, onRename, onDelete, onToggleStar, onFolderClick }) => {
+const FileGrid = ({ files, onRename, onDelete, onToggleStar, onFolderClick, onUpdatePermissions }) => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [renameModalOpen, setRenameModalOpen] = useState(false);
-  const [shareModalOpen, setShareModalOpen] = useState(false);
   const [newFileName, setNewFileName] = useState("");
   
   const handleRename = (file) => {
     setSelectedFile(file);
     setNewFileName(file.name);
     setRenameModalOpen(true);
-  };
-
-  const handleShare = (file) => {
-    setSelectedFile(file);
-    setShareModalOpen(true);
   };
 
   const handleDelete = (file) => {
@@ -30,12 +24,6 @@ const FileGrid = ({ files, onRename, onDelete, onToggleStar, onFolderClick }) =>
     setRenameModalOpen(false);
     setSelectedFile(null);
   };
-  
-  const confirmShare = () => {
-    alert(`Shared "${selectedFile.name}" with your team.`);
-    setShareModalOpen(false);
-    setSelectedFile(null);
-  };
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -44,10 +32,10 @@ const FileGrid = ({ files, onRename, onDelete, onToggleStar, onFolderClick }) =>
           key={file.id}
           file={file}
           onRename={handleRename}
-          onShare={handleShare}
           onDelete={handleDelete}
           onToggleStar={onToggleStar}
           onFolderClick={onFolderClick}
+          onUpdatePermissions={onUpdatePermissions}
         />
       ))}
 
@@ -63,18 +51,6 @@ const FileGrid = ({ files, onRename, onDelete, onToggleStar, onFolderClick }) =>
           onChange={(e) => setNewFileName(e.target.value)}
           className="w-full px-3 py-2 border border-gray-300 rounded-md"
         />
-      </Modal>
-
-      <Modal
-        isOpen={shareModalOpen}
-        onClose={() => setShareModalOpen(false)}
-        onConfirm={confirmShare}
-        title="Share File"
-        confirmText="Send"
-      >
-        <p className="text-gray-700 mb-2">
-          Share "{selectedFile?.name}" with your team?
-        </p>
       </Modal>
     </div>
   );
@@ -95,6 +71,7 @@ FileGrid.propTypes = {
   onDelete: PropTypes.func.isRequired,
   onToggleStar: PropTypes.func.isRequired,
   onFolderClick: PropTypes.func,
+  onUpdatePermissions: PropTypes.func.isRequired
 };
 
 export default FileGrid;

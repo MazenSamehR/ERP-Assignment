@@ -5,6 +5,7 @@ import FileSection from './components/FileSection';
 import FloatingActionButton from './components/FloatingActionButton';
 import { folderData, fileData } from '../src/data/mockData';
 import { FileType } from './constants/fileTypes';
+import { Role } from './constants/permissions';
 
 function App() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -56,6 +57,19 @@ function App() {
     setCurrentPath(prev => prev.slice(0, -1));
   };
 
+  const handleUpdatePermissions = (itemId, permissions) => {
+    setFolders(prev =>
+      prev.map(folder =>
+        folder.id === itemId ? { ...folder, permissions } : folder
+      )
+    );
+    setFiles(prev =>
+      prev.map(file =>
+        file.id === itemId ? { ...file, permissions } : file
+      )
+    );
+  };
+
   const handleAddItem = (newItem) => {
     const id = `${newItem.type}-${Date.now()}`;
     const parentFolderId = currentPath.length > 0 ? currentPath[currentPath.length - 1].id : null;
@@ -65,7 +79,8 @@ function App() {
       id,
       modified: new Date().toISOString(),
       starred: false,
-      parentFolderId
+      parentFolderId,
+      permissions: [{ email: 'you@example.com', role: Role.OWNER }]
     };
 
     if (newItem.type === 'folder') {
@@ -134,6 +149,7 @@ function App() {
               onDelete={handleDelete}
               onToggleStar={handleToggleStar}
               onFolderClick={handleFolderClick}
+              onUpdatePermissions={handleUpdatePermissions}
               collapsible={true}
               expanded={true} 
             />
@@ -143,6 +159,7 @@ function App() {
               onRename={handleRename}
               onDelete={handleDelete}
               onToggleStar={handleToggleStar}
+              onUpdatePermissions={handleUpdatePermissions}
               collapsible={true}
               expanded={true} 
             />
@@ -157,6 +174,7 @@ function App() {
             onDelete={handleDelete}
             onToggleStar={handleToggleStar}
             onFolderClick={handleFolderClick}
+            onUpdatePermissions={handleUpdatePermissions}
             collapsible={false}
           />
         );
@@ -168,6 +186,7 @@ function App() {
             onRename={handleRename}
             onDelete={handleDelete}
             onToggleStar={handleToggleStar}
+            onUpdatePermissions={handleUpdatePermissions}
             collapsible={false}
           />
         );
@@ -182,6 +201,7 @@ function App() {
                 onDelete={handleDelete}
                 onToggleStar={handleToggleStar}
                 onFolderClick={handleFolderClick}
+                onUpdatePermissions={handleUpdatePermissions}
                 collapsible={false}
               />
             )}
@@ -192,6 +212,7 @@ function App() {
                 onRename={handleRename}
                 onDelete={handleDelete}
                 onToggleStar={handleToggleStar}
+                onUpdatePermissions={handleUpdatePermissions}
                 collapsible={false}
               />
             )}
