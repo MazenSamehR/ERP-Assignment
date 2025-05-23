@@ -13,6 +13,7 @@ function App() {
   const [files, setFiles] = useState(fileData);
   const [activeSection, setActiveSection] = useState('home');
   const [currentPath, setCurrentPath] = useState([]);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const handleSearch = (query) => {
     setSearchQuery(query);
@@ -193,29 +194,25 @@ function App() {
       case 'starred':
         return (
           <>
-            {starredFolders.length > 0 && (
-              <FileSection 
-                title="Starred Folders" 
-                files={starredFolders}
-                onRename={handleRename}
-                onDelete={handleDelete}
-                onToggleStar={handleToggleStar}
-                onFolderClick={handleFolderClick}
-                onUpdatePermissions={handleUpdatePermissions}
-                collapsible={false}
-              />
-            )}
-            {starredFiles.length > 0 && (
-              <FileSection 
-                title="Starred Files" 
-                files={starredFiles}
-                onRename={handleRename}
-                onDelete={handleDelete}
-                onToggleStar={handleToggleStar}
-                onUpdatePermissions={handleUpdatePermissions}
-                collapsible={false}
-              />
-            )}
+            <FileSection 
+              title="Starred Folders" 
+              files={starredFolders}
+              onRename={handleRename}
+              onDelete={handleDelete}
+              onToggleStar={handleToggleStar}
+              onFolderClick={handleFolderClick}
+              onUpdatePermissions={handleUpdatePermissions}
+              collapsible={false}
+            />
+            <FileSection 
+              title="Starred Files" 
+              files={starredFiles}
+              onRename={handleRename}
+              onDelete={handleDelete}
+              onToggleStar={handleToggleStar}
+              onUpdatePermissions={handleUpdatePermissions}
+              collapsible={false}
+            />
           </>
         );
       default:
@@ -224,18 +221,27 @@ function App() {
   };
 
   return (
-    <div className="h-screen w-full flex bg-gray-50 overflow-hidden">
-      <div className="h-full">
-        <Sidebar activeSection={activeSection} onSectionChange={setActiveSection} />
+    <div className="h-screen w-full flex flex-col md:flex-row bg-gray-50 overflow-hidden">
+      <div className={`${isSidebarOpen ? 'block' : 'hidden'} md:block fixed md:relative z-50 h-full bg-white md:bg-transparent`}>
+        <Sidebar 
+          activeSection={activeSection} 
+          onSectionChange={(section) => {
+            setActiveSection(section);
+            setIsSidebarOpen(false);
+          }} 
+        />
       </div>
       
-      <div className="flex-1 overflow-auto p-8">
+      <div className="flex-1 overflow-auto">
         <Header 
           username="YN" 
           onSearch={handleSearch}
           breadcrumbs={currentPath.map(folder => folder.name)}
+          onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)}
         />
-        {renderContent()}
+        <div className="p-4 md:p-8">
+          {renderContent()}
+        </div>
         <FloatingActionButton onAddItem={handleAddItem} />
       </div>
     </div>
